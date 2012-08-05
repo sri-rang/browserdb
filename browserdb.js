@@ -77,7 +77,13 @@
               callback(event);
             };
             saveRequest.onsuccess = function (event) {
-              callback(undefined, event.target.result, event);
+              var getRequest = store.get(event.target.result);
+              getRequest.onerror = function (event) {
+                callback(event);
+              };
+              getRequest.onsuccess = function (event) {
+                callback(undefined, event.target.result, event);
+              };
             };
           },
           remove:function (query, callback) {
