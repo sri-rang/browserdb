@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="../browserdb.js"></script>
+</head>
+<body>
+
+<script>
+  window.onload = function () {
+
+    var myAppDb = new BrowserDb({
+      db:"myApp3Db",
+      collections:["users", "books"]
+    }, function (error, myAppDbInstance) {
+      console.log(error, myAppDbInstance);
+//      myAppDbInstance.books.save({author:"me", title:"sucks"}, function (error, bookId) {
+//        console.log(error, bookId);
+//        myAppDbInstance.books.findById(bookId, function(error, book) {
+//          console.log(error, book);
+//        });
+//      });
+    });
+
+  };
+</script>
+
+</body>
+</html>
