@@ -59,7 +59,7 @@
         }
       }
 
-      callback();
+      setTimeout(callback, 100);
     };
 
     var browserDbInstance;

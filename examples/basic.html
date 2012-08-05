@@ -13,12 +13,12 @@
       collections:["users", "books"]
     }, function (error, myAppDbInstance) {
       console.log(error, myAppDbInstance);
-//      myAppDbInstance.books.save({author:"me", title:"sucks"}, function (error, bookId) {
-//        console.log(error, bookId);
-//        myAppDbInstance.books.findById(bookId, function(error, book) {
-//          console.log(error, book);
-//        });
-//      });
+      myAppDbInstance.books.save({author:"me", title:"sucks"}, function (error, bookId) {
+        console.log(error, bookId);
+        myAppDbInstance.books.findById(bookId, function(error, book) {
+          console.log(error, book);
+        });
+      });
     });
 
   };
