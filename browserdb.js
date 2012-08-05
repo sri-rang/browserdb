@@ -89,11 +89,33 @@
           remove:function (query, callback) {
           },
           find:function (query, callback) {
+            var result = [];
+            var openCursorRequest = store.openCursor();
+            openCursorRequest.onerror = function (event) {
+              callback(event);
+            };
+            openCursorRequest.onsuccess = function (event) {
+              var cursor = event.target.result;
+              if (cursor && cursor.key) {
+                var getRequest = store.get(cursor.key);
+                getRequest.onerror = function (event) {
+                  callback(event);
+                };
+                getRequest.onsuccess = function (event) {
+                  if( !query ) {
+                    result.push(event.target.result);
+                  }
+                  cursor.continue();
+                };
+              } else {
+                callback(undefined, result, event);
+              }
+            };
           },
           findOne:function (query, callback) {
           },
-          findById:function (key, callback) {
-            var getRequest = store.get(key);
+          findById:function (id, callback) {
+            var getRequest = store.get(id);
             getRequest.onerror = function (event) {
               callback(event);
             };

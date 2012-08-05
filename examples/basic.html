@@ -13,13 +13,16 @@
       collections:["users", "books"]
     }, function (error, myAppDbInstance) {
       console.log(error, myAppDbInstance);
-      myAppDbInstance.books.save({author:"me", title:"sucks"}, function (error, book) {
-        console.log(error, book.__id, book);
-        book.author = "Sri";
-        book.title = "How it sucks!";
-        myAppDbInstance.books.save(book, function (error, book) {
-          console.log(error, book.__id, book);
-        });
+//      myAppDbInstance.books.save({author:"me", title:"sucks"}, function (error, book) {
+//        console.log(error, book.__id, book);
+//        book.author = "Sri";
+//        book.title = "How it sucks!";
+//        myAppDbInstance.books.save(book, function (error, book) {
+//          console.log(error, book.__id, book);
+//        });
+//      });
+      myAppDbInstance.books.find(undefined, function(error, books) {
+        console.log(error, books);
       });
     });
 
