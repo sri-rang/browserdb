@@ -2,15 +2,21 @@
 
 ### Mission
 
-A document based database is needed on the browser. IndexedDB fills in this gap but has a terribly confusing API.
+IndexedDB has a terribly confusing API.  Can we better it?
 
 Can we provide a simpler API for IndexedDB? Can we make this API similar to popular document based data stores?
 
-Enter BrowserDB.
+*Enter BrowserDB*
 
 ### In-browser only
 
-BrowserDB should be used in the browser only. It is not a server side JavaScript library. It depends on the browser.
+BrowserDB should be used in the browser only. It is not a server side JavaScript library.
+
+### Inspiration
+
+MongoDB has a excellent API. It makes querying and working with the datastore pleasurable.
+
+BrowserDB hopes to deliver a similar experience to developers.
 
 ### IndexedDB
 
