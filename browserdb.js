@@ -1,6 +1,5 @@
 (function () {
 
-
   window.BrowserDb = function (options, callback) {
 
     console.log("options", options);
@@ -62,10 +61,10 @@
       setTimeout(callback, 100);
     };
 
-    var browserDbInstance;
-
     var prepareBrowserDbInstance = function () {
       console.log("  prepareBrowserDbInstance");
+
+      var browserDbInstance;
 
       var getCollectionApiInstance = function (collection) {
         var transaction = db.transaction([collection], "readwrite");
@@ -102,7 +101,7 @@
                   callback(event);
                 };
                 getRequest.onsuccess = function (event) {
-                  if( !query ) {
+                  if (!query) {
                     result.push(event.target.result);
                   }
                   cursor.continue();
@@ -160,7 +159,6 @@
       });
     };
 
-    return browserDbInstance;
   };
 
 })();
