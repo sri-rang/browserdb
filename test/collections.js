@@ -1,12 +1,12 @@
 new BrowserDb({
-  db:"testDB",
+  db:"collectionsDb",
   collections:["one", "two", "three"]
-}, function (error, testDb) {
+}, function (error, browserDb) {
 
   test("Collection APIs must be exposed in db instance", function () {
-    ok(testDb.one, "testDb.one must exist");
-    ok(testDb.two, "testDb.two must exist");
-    ok(testDb.three, "testDb.three must exist");
+    ok(browserDb.one, "browserDb.one must exist");
+    ok(browserDb.two, "browserDb.two must exist");
+    ok(browserDb.three, "browserDb.three must exist");
   });
 
 });

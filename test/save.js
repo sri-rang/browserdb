@@ -1,10 +1,10 @@
 new BrowserDb({
-  db:"testDB",
+  db:"saveDb",
   collections:["one", "two", "three"]
-}, function (error, testDb) {
+}, function (error, browserDb) {
 
 
-  testDb.one.save({
+  browserDb.one.save({
     name:"Sri"
   }, function (error, savedObject) {
     test("Save an object", function () {
@@ -14,7 +14,7 @@ new BrowserDb({
     });
   });
 
-  testDb.two.save({
+  browserDb.two.save({
     __id:"wtf",
     name:"Sri"
   }, function (error, savedObject) {
@@ -23,7 +23,7 @@ new BrowserDb({
     });
   });
 
-  testDb.two.save({
+  browserDb.two.save({
     __id:"wtf",
     name:"Srirangan"
   }, function (error, savedObject) {

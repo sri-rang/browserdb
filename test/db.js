@@ -1,14 +1,15 @@
 new BrowserDb({
-  db:"testDB",
-  collections:[]
-}, function (error, testDb) {
+  db:"db",
+  collections:["one", "two", "three"]
+}, function (error, browserDb) {
 
-  test("No errors connecting to db", function () {
+  test("No errors connecting to browserDb", function () {
     ok(!error, "Error must be undefined")
   });
 
-  test("Db instance created", function () {
-    ok(testDb, "testDb instance")
+  test("Db created", function () {
+    ok(browserDb, "browserDb")
   });
 
 });
+
