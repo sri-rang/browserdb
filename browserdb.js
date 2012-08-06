@@ -58,7 +58,7 @@
         }
       }
 
-      setTimeout(callback, 100);
+      if (typeof callback === "function") setTimeout(callback, 100);
     };
 
     var prepareBrowserDbInstance = function () {
@@ -130,7 +130,7 @@
         browserDbInstance[collection] = getCollectionApiInstance(collection);
       });
 
-      callback(undefined, browserDbInstance);
+      if (typeof callback === "function") callback(undefined, browserDbInstance);
     };
 
     window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
