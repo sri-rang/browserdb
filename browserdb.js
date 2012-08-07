@@ -59,6 +59,42 @@
       var getCollectionApiInstance = function (collection) {
         var transaction = db.transaction([collection], "readwrite");
         var store = transaction.objectStore(collection);
+        var objectQueryTest = function (query, object) {
+          if (typeof query !== "object") return false;
+          else {
+            for (var clause in query) {
+              var definition = query[clause];
+              if (typeof definition !== "object") {
+                if (object[clause] instanceof Array && object[clause].indexOf(definition) === -1) return false;
+                else if (!(object[clause] instanceof Array) && object[clause] !== definition) return false;
+              } else {
+                for (var operator in definition) {
+                  var value = definition[operator];
+                  var operation;
+                  switch (operator) {
+                    case '$gt':
+                      operation = object[clause] > value;
+                      break;
+                    case '$gte':
+                      operation = object[clause] >= value;
+                      break;
+                    case '$lt':
+                      operation = object[clause] < value;
+                      break;
+                    case '$lte':
+                      operation = object[clause] <= value;
+                      break;
+                    case '$ne':
+                      operation = object[clause] !== value;
+                      break;
+                  }
+                  if (!operation) return false;
+                }
+              }
+            }
+            return true;
+          }
+        };
         return {
           save:function (object, callback) {
             var saveRequest = store.put(object);
@@ -97,6 +133,8 @@
                   getRequest.onsuccess = function (event) {
                     if (!query) {
                       result.push(event.target.result);
+                    } else {
+                      if (objectQueryTest(query, event.target.result)) result.push(event.target.result);
                     }
                     cursor.continue();
                   };
