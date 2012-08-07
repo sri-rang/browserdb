@@ -1,0 +1,247 @@
+<!doctype html>
+<!-- The Time Machine GitHub pages theme was designed and developed by Jon Rohan, on Feb 7, 2012. -->
+<!-- Follow him for fun. http://twitter.com/jonrohan. Tail his code on http://github.com/jonrohan -->
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+  <link rel="stylesheet" href="stylesheets/stylesheet.css" media="screen"/>
+  <link rel="stylesheet" href="stylesheets/pygment_trac.css"/>
+  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/script.js"></script>
+
+  <title>BrowserDB</title>
+  <meta name="description" content="Simple in-browser document based data store">
+
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+</head>
+
+<body>
+
+  <div class="wrapper">
+    <header>
+      <h1 class="title">BrowserDB</h1>
+    </header>
+    <div id="container">
+      <p class="tagline">Simple in-browser document based data store</p>
+      <div id="main" role="main">
+        <div class="download-bar">
+        <div class="inner">
+          <a href="https://github.com/Srirangan/browserdb/tarball/master" class="download-button tar"><span>Download</span></a>
+          <a href="https://github.com/Srirangan/browserdb/zipball/master" class="download-button zip"><span>Download</span></a>
+          <a href="https://github.com/Srirangan/browserdb" class="code">View BrowserDB on GitHub</a>
+        </div>
+        <span class="blc"></span><span class="trc"></span>
+        </div>
+        <article class="markdown-body">
+          <h1>BrowserDB</h1>
+
+<p><em>Experimental. Tested on latest versions of Chromium.</em></p>
+
+<h4>Mission</h4>
+
+<p>IndexedDB has a terribly confusing API.  Can we better it?</p>
+
+<p>Can we provide a simpler API? Can this API be similar to popular document based data stores?</p>
+
+<p><em>Enter BrowserDB</em></p>
+
+<h4>In-browser only</h4>
+
+<p>BrowserDB should be used in the browser only. It is not a server side JavaScript library.</p>
+
+<h4>Inspiration</h4>
+
+<p>MongoDB has a excellent API. It makes querying and working with the datastore pleasurable.</p>
+
+<p>BrowserDB hopes to deliver a similar experience to developers.</p>
+
+<h2>Examples</h2>
+
+<pre><code>&lt;script src="https://raw.github.com/Srirangan/browserdb/master/browserdb.js"&gt;&lt;/script&gt;
+
+// Create a database
+
+new BrowserDb({
+  db:"myAppsDb",
+  collections:["one", "two", "three"]
+}, function (error, browserDb) {
+  if( !error ) console.log("success");
+});
+
+
+
+// Change the collections / schema
+// No versioning pain
+
+new BrowserDb({
+  db:"myAppsDb",
+  collections:["users", "books"]
+}, function (error, browserDb) {
+  if( !error ) console.log("success");
+});
+
+
+
+// Save some books
+
+browserDb.books.save({
+  __id:1,
+  topic:["javascript"],
+  title:"The Good Parts",
+  cost:50
+});
+
+browserDb.books.save({
+  __id:2,
+  topic:"android",
+  title:"Android in action",
+  cost:100
+});
+
+browserDb.books.save({
+  __id:3,
+  topic:["android", "java"],
+  title:"Apache Maven 3 Cookbook",
+  author:"Srirangan",
+  cost:150
+});
+
+browserDb.books.save({ // __id not mandatory, gets auto generated
+  topic:["android"],
+  title:"Another android book",
+});
+
+
+
+// Find some books
+
+browserDb.books.find(function (error, books) { // find all
+  // books.length === 3
+});
+
+browserDb.books.findOne(function (error, book) {
+  console.log(book);
+});
+
+browserDb.books.find({title:"The Good Parts"}, function (error, books) {
+  // books[0].__id === 1
+});
+
+browserDb.books.find({topic:"java"}, function (error, books) {
+  // books[0].__id === 3
+});
+
+browserDb.books.find({cost:{$gt:100}}, function (error, books) {
+  // books[0].__id === 3
+});
+
+browserDb.books.find({cost:{$gte:100}}, function (error, books) {
+  // books[0].__id === 2
+  // books[1].__id === 3
+});
+
+browserDb.books.find({cost:{$lt:100}}, function (error, books) {
+  // books[0].__id === 1
+});
+
+browserDb.books.find({cost:{$lte:100}}, function (error, books) {
+  // books[0].__id === 1
+  // books[1].__id === 2
+});
+
+browserDb.books.find({cost:{$ne:100}}, function (error, books) {
+  // books[0].__id === 1
+  // books[1].__id === 3
+});
+
+browserDb.books.find({cost:{$nin:[50, 75]}}, function (error, books) {
+  // books[0].__id === 2
+  // books[1].__id === 3
+});
+
+browserDb.books.find({cost:{$mod:[12, 2]}}, function (error, books) {
+  // books[0].__id === 1
+});
+
+browserDb.books.find({topic:{$size:2}}, function (error, books) {
+  // books[0].__id === 3
+});
+
+browserDb.books.find({author:{$exists:true}}, function (error, books) {
+  // books[0].__id === 3
+});
+
+browserDb.books.find({author:{$typeof:"string"}}, function (error, books) {
+  // books[0].__id === 3
+});
+
+browserDb.books.find({topic:{$nottypeof:"object"}}, function (error, books) {
+  // books[0].__id === 2
+});
+
+
+
+// Remove books
+
+browserDb.books.remove({title:"Android in action"}, function () {
+  //..
+});
+
+browserDb.books.remove(function (error, result) { // remove all
+  //..
+});
+</code></pre>
+
+<h2>Unlicense</h2>
+
+<pre><code>This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or
+distribute this software, either in source code form or as a compiled
+binary, for any purpose, commercial or non-commercial, and by any
+means.
+
+In jurisdictions that recognize copyright laws, the author or authors
+of this software dedicate any and all copyright interest in the
+software to the public domain. We make this dedication for the benefit
+of the public at large and to the detriment of our heirs and
+successors. We intend this dedication to be an overt act of
+relinquishment in perpetuity of all present and future rights to this
+software under copyright law.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS BE LIABLE FOR ANY CLAIM, DAMAGES OR
+OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
+ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+OTHER DEALINGS IN THE SOFTWARE.
+
+For more information, please refer to &lt;http://unlicense.org/&gt;
+</code></pre>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="owner">
+      <p><a href="https://github.com/Srirangan" class="avatar"><img src="https://secure.gravatar.com/avatar/40bec8c5a2a804cc48ab9d8443592b90?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a> <a href="https://github.com/Srirangan">Srirangan</a> maintains <a href="https://github.com/Srirangan/browserdb">BrowserDB</a></p>
+
+
+      </div>
+      <div class="creds">
+        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
+      </div>
+    </footer>
+  </div>
+  <div class="current-section">
+    <a href="#top">Scroll to top</a>
+    <a href="https://github.com/Srirangan/browserdb/tarball/master" class="tar">tar</a><a href="https://github.com/Srirangan/browserdb/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+    <p class="name"></p>
+  </div>
+
+  
+</body>
+</html>
