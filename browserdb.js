@@ -77,29 +77,34 @@
           },
           remove:function (query, callback) {
           },
-          find:function (query, callback) {
-            var result = [];
-            var openCursorRequest = store.openCursor();
-            openCursorRequest.onerror = function (event) {
-              if (typeof callback === "function") callback(event);
-            };
-            openCursorRequest.onsuccess = function (event) {
-              var cursor = event.target.result;
-              if (cursor && cursor.key) {
-                var getRequest = store.get(cursor.key);
-                getRequest.onerror = function (event) {
-                  if (typeof callback === "function") callback(event);
-                };
-                getRequest.onsuccess = function (event) {
-                  if (!query) {
-                    result.push(event.target.result);
-                  }
-                  cursor.continue();
-                };
-              } else {
-                if (typeof callback === "function") callback(undefined, result, event);
-              }
-            };
+          find:function () {
+            var query = (typeof arguments[0] === "object") ? arguments[0] : undefined;
+            var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
+            if (!callback) throw new Error("Callback required");
+            else {
+              var result = [];
+              var openCursorRequest = store.openCursor();
+              openCursorRequest.onerror = function (event) {
+                if (typeof callback === "function") callback(event);
+              };
+              openCursorRequest.onsuccess = function (event) {
+                var cursor = event.target.result;
+                if (cursor && cursor.key) {
+                  var getRequest = store.get(cursor.key);
+                  getRequest.onerror = function (event) {
+                    if (typeof callback === "function") callback(event);
+                  };
+                  getRequest.onsuccess = function (event) {
+                    if (!query) {
+                      result.push(event.target.result);
+                    }
+                    cursor.continue();
+                  };
+                } else {
+                  callback(undefined, result, event);
+                }
+              };
+            }
           },
           findOne:function (query, callback) {
           },
