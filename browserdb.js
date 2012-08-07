@@ -57,7 +57,7 @@
       var browserDbInstance;
 
       var getCollectionApiInstance = function (collection) {
-        var transaction = db.transaction([collection], "readwrite");
+        var transaction = db.transaction([collection], IDBTransaction.READ_WRITE);
         var store = transaction.objectStore(collection);
         var findObjectsByQuery = function (query, onlyOne, callback) {
           var objectQueryTest = function (query, object) {
@@ -218,7 +218,8 @@
     };
 
     window.indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
-
+    window.IDBTransaction = window.IDBTransaction || window.webkitIDBTransaction || window.OIDBTransaction || window.msIDBTransaction;
+    
     var db;
     var openDbRequest = window.indexedDB.open(options.db);
 
