@@ -12,7 +12,7 @@ new BrowserDb({
 
   browserDb.books.save({
     __id:2,
-    topic:["android"],
+    topic:"android",
     title:"Android in action",
     cost:100
   });
@@ -118,6 +118,13 @@ new BrowserDb({
     test("Find where authors are typeof string", function () {
       deepEqual(books.length, 1, "One book");
       deepEqual(books[0].__id, 3, "book __id must be 3");
+    });
+  });
+
+  browserDb.books.find({topic:{$nottypeof:"object"}}, function (error, books) {
+    test("Find where topic is not an array", function () {
+      deepEqual(books.length, 1, "One book");
+      deepEqual(books[0].__id, 2, "book __id must be 2");
     });
   });
 

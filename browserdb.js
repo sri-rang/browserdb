@@ -102,6 +102,9 @@
                     case '$typeof':
                       operation = typeof object[clause] === value;
                       break;
+                    case '$nottypeof':
+                      operation = typeof object[clause] !== value;
+                      break;
                   }
                   if (!operation) return false;
                 }
