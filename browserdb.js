@@ -87,6 +87,21 @@
                     case '$ne':
                       operation = object[clause] !== value;
                       break;
+                    case '$nin':
+                      operation = value instanceof Array && value.indexOf(object[clause]) === -1;
+                      break;
+                    case '$mod':
+                      operation = value instanceof Array && value.length === 2 && object[clause] % value[0] === value[1];
+                      break;
+                    case '$size':
+                      operation = object[clause] instanceof Array && object[clause].length === value;
+                      break;
+                    case '$exists':
+                      operation = Boolean(object[clause]) === value;
+                      break;
+                    case '$typeof':
+                      operation = typeof object[clause] === value;
+                      break;
                   }
                   if (!operation) return false;
                 }
