@@ -31,6 +31,13 @@ new BrowserDb({
     });
   });
 
+  browserDb.books.findOne(function (error, book) {
+    test("Find one book", function () {
+      ok(book, "Book must exist");
+      ok(book.__id, "Book must have __id");
+    });
+  });
+
   browserDb.books.find({title:"The Good Parts"}, function (error, books) {
     test("Find by title", function () {
       deepEqual(books.length, 1, "One book");

@@ -59,59 +59,86 @@
       var getCollectionApiInstance = function (collection) {
         var transaction = db.transaction([collection], "readwrite");
         var store = transaction.objectStore(collection);
-        var objectQueryTest = function (query, object) {
-          if (typeof query !== "object") return false;
-          else {
-            for (var clause in query) {
-              var definition = query[clause];
-              if (typeof definition !== "object") {
-                if (object[clause] instanceof Array && object[clause].indexOf(definition) === -1) return false;
-                else if (!(object[clause] instanceof Array) && object[clause] !== definition) return false;
-              } else {
-                for (var operator in definition) {
-                  var value = definition[operator];
-                  var operation;
-                  switch (operator) {
-                    case '$gt':
-                      operation = object[clause] > value;
-                      break;
-                    case '$gte':
-                      operation = object[clause] >= value;
-                      break;
-                    case '$lt':
-                      operation = object[clause] < value;
-                      break;
-                    case '$lte':
-                      operation = object[clause] <= value;
-                      break;
-                    case '$ne':
-                      operation = object[clause] !== value;
-                      break;
-                    case '$nin':
-                      operation = value instanceof Array && value.indexOf(object[clause]) === -1;
-                      break;
-                    case '$mod':
-                      operation = value instanceof Array && value.length === 2 && object[clause] % value[0] === value[1];
-                      break;
-                    case '$size':
-                      operation = object[clause] instanceof Array && object[clause].length === value;
-                      break;
-                    case '$exists':
-                      operation = Boolean(object[clause]) === value;
-                      break;
-                    case '$typeof':
-                      operation = typeof object[clause] === value;
-                      break;
-                    case '$nottypeof':
-                      operation = typeof object[clause] !== value;
-                      break;
+        var findObjectsByQuery = function (query, onlyOne, callback) {
+          var objectQueryTest = function (query, object) {
+            if (typeof query !== "object") return false;
+            else {
+              for (var clause in query) {
+                var definition = query[clause];
+                if (typeof definition !== "object") {
+                  if (object[clause] instanceof Array && object[clause].indexOf(definition) === -1) return false;
+                  else if (!(object[clause] instanceof Array) && object[clause] !== definition) return false;
+                } else {
+                  for (var operator in definition) {
+                    var value = definition[operator];
+                    var operation;
+                    switch (operator) {
+                      case '$gt':
+                        operation = object[clause] > value;
+                        break;
+                      case '$gte':
+                        operation = object[clause] >= value;
+                        break;
+                      case '$lt':
+                        operation = object[clause] < value;
+                        break;
+                      case '$lte':
+                        operation = object[clause] <= value;
+                        break;
+                      case '$ne':
+                        operation = object[clause] !== value;
+                        break;
+                      case '$nin':
+                        operation = value instanceof Array && value.indexOf(object[clause]) === -1;
+                        break;
+                      case '$mod':
+                        operation = value instanceof Array && value.length === 2 && object[clause] % value[0] === value[1];
+                        break;
+                      case '$size':
+                        operation = object[clause] instanceof Array && object[clause].length === value;
+                        break;
+                      case '$exists':
+                        operation = Boolean(object[clause]) === value;
+                        break;
+                      case '$typeof':
+                        operation = typeof object[clause] === value;
+                        break;
+                      case '$nottypeof':
+                        operation = typeof object[clause] !== value;
+                        break;
+                    }
+                    if (!operation) return false;
                   }
-                  if (!operation) return false;
                 }
               }
+              return true;
             }
-            return true;
-          }
+          };
+          var result = [];
+          var openCursorRequest = store.openCursor();
+          openCursorRequest.onerror = function (event) {
+            if (typeof callback === "function") callback(event);
+          };
+          openCursorRequest.onsuccess = function (event) {
+            var cursor = event.target.result;
+            if (cursor && cursor.key) {
+              var getRequest = store.get(cursor.key);
+              getRequest.onerror = function (event) {
+                if (typeof callback === "function") callback(event);
+              };
+              getRequest.onsuccess = function (event) {
+                if (!query) {
+                  result.push(event.target.result);
+                  if (onlyOne && result.length === 1) callback(undefined, result, event);
+                } else {
+                  if (objectQueryTest(query, event.target.result)) result.push(event.target.result);
+                }
+                cursor.continue();
+              };
+            } else {
+              callback(undefined, result, event);
+            }
+          };
         };
         return {
           save:function (object, callback) {
@@ -129,40 +156,35 @@
               };
             };
           },
-          remove:function (query, callback) {
+          remove:function () {
+            var query = (typeof arguments[0] === "object") ? arguments[0] : undefined;
+            var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
+            findObjectsByQuery(query, false, function (error, result, event) {
+              result.forEach(function (object) {
+                store.delete(object.__id);
+              });
+              if (typeof callback === "function") callback(error, true, event);
+            });
           },
           find:function () {
             var query = (typeof arguments[0] === "object") ? arguments[0] : undefined;
             var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
             if (!callback) throw new Error("Callback required");
             else {
-              var result = [];
-              var openCursorRequest = store.openCursor();
-              openCursorRequest.onerror = function (event) {
-                if (typeof callback === "function") callback(event);
-              };
-              openCursorRequest.onsuccess = function (event) {
-                var cursor = event.target.result;
-                if (cursor && cursor.key) {
-                  var getRequest = store.get(cursor.key);
-                  getRequest.onerror = function (event) {
-                    if (typeof callback === "function") callback(event);
-                  };
-                  getRequest.onsuccess = function (event) {
-                    if (!query) {
-                      result.push(event.target.result);
-                    } else {
-                      if (objectQueryTest(query, event.target.result)) result.push(event.target.result);
-                    }
-                    cursor.continue();
-                  };
-                } else {
-                  callback(undefined, result, event);
-                }
-              };
+              findObjectsByQuery(query, false, function (error, result, event) {
+                callback(error, result, event);
+              });
             }
           },
-          findOne:function (query, callback) {
+          findOne:function () {
+            var query = (typeof arguments[0] === "object") ? arguments[0] : undefined;
+            var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
+            if (!callback) throw new Error("Callback required");
+            else {
+              findObjectsByQuery(query, false, function (error, result, event) {
+                callback(error, result[0], event);
+              });
+            }
           },
           findById:function (id, callback) {
             var getRequest = store.get(id);
