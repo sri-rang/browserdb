@@ -20,29 +20,29 @@
 
 <body>
 
-  <div class="wrapper">
-    <header>
-      <h1 class="title">BrowserDB</h1>
-    </header>
-    <div id="container">
-      <p class="tagline">Simple in-browser document based data store</p>
-      <div id="main" role="main">
-        <div class="download-bar">
-        <div class="inner">
-          <a href="https://github.com/Srirangan/browserdb/tarball/master" class="download-button tar"><span>Download</span></a>
-          <a href="https://github.com/Srirangan/browserdb/zipball/master" class="download-button zip"><span>Download</span></a>
-          <a href="https://github.com/Srirangan/browserdb" class="code">View BrowserDB on GitHub</a>
-        </div>
-        <span class="blc"></span><span class="trc"></span>
-        </div>
-        <article class="markdown-body">
-          <h1>BrowserDB</h1>
+<div class="wrapper">
+<header>
+  <h1 class="title">BrowserDB</h1>
+</header>
+<div id="container">
+<p class="tagline">Simple in-browser document based data store</p>
+<div id="main" role="main">
+<div class="download-bar">
+  <div class="inner">
+    <a href="https://github.com/Srirangan/browserdb/tarball/master" class="download-button tar"><span>Download</span></a>
+    <a href="https://github.com/Srirangan/browserdb/zipball/master" class="download-button zip"><span>Download</span></a>
+    <a href="https://github.com/Srirangan/browserdb" class="code">View BrowserDB on GitHub</a>
+  </div>
+  <span class="blc"></span><span class="trc"></span>
+</div>
+<article class="markdown-body">
+<h1>BrowserDB</h1>
 
 <p><em>Experimental. Tested on latest versions of Chromium.</em></p>
 
 <h4>Mission</h4>
 
-<p>IndexedDB has a terribly confusing API.  Can we better it?</p>
+<p>IndexedDB has a terribly confusing API. Can we better it?</p>
 
 <p>Can we provide a simpler API? Can this API be similar to popular document based data stores?</p>
 
@@ -58,140 +58,206 @@
 
 <p>BrowserDB hopes to deliver a similar experience to developers.</p>
 
-<h2>Examples</h2>
+<h2>Using BrowserDB</h2>
 
-<pre><code>&lt;script src="https://raw.github.com/Srirangan/browserdb/master/browserdb.js"&gt;&lt;/script&gt;
+<h3>Include BrowserDB</h3>
 
-// Create a database
+<pre><code>&lt;script src="https://raw.github.com/Srirangan/browserdb/master/browserdb.js"&gt;&lt;/script&gt;</code></pre>
 
+<h3>Create a database</h3>
+
+<pre><code>
 new BrowserDb({
-  db:"myAppsDb",
-  collections:["one", "two", "three"]
+db:"myAppsDb",
+collections:["one", "two", "three"]
 }, function (error, browserDb) {
-  if( !error ) console.log("success");
+if( !error ) console.log("success");
 });
+</code></pre>
 
+<h3>Change collections to update the schema</h3>
 
-
-// Change the collections / schema
-// No versioning pain
-
+<pre><code>
 new BrowserDb({
-  db:"myAppsDb",
-  collections:["users", "books"]
+db:"myAppsDb",
+collections:["users", "books"]
 }, function (error, browserDb) {
-  if( !error ) console.log("success");
+if( !error ) console.log("success");
 });
+</code></pre>
 
+<h3>Save some books</h3>
 
-
-// Save some books
-
+<pre><code>
 browserDb.books.save({
-  __id:1,
-  topic:["javascript"],
-  title:"The Good Parts",
-  cost:50
-});
-
-browserDb.books.save({
-  __id:2,
-  topic:"android",
-  title:"Android in action",
-  cost:100
+__id:1,
+topic:["javascript"],
+title:"The Good Parts",
+cost:50
 });
 
 browserDb.books.save({
-  __id:3,
-  topic:["android", "java"],
-  title:"Apache Maven 3 Cookbook",
-  author:"Srirangan",
-  cost:150
+__id:2,
+topic:"android",
+title:"Android in action",
+cost:100
 });
 
-browserDb.books.save({ // __id not mandatory, gets auto generated
-  topic:["android"],
-  title:"Another android book",
+browserDb.books.save({
+__id:3,
+topic:["android", "java"],
+title:"Apache Maven 3 Cookbook",
+author:"Srirangan",
+cost:150
 });
+</code></pre>
 
+<h3>__id is not mandatory, gets auto generated</h3>
 
-
-// Find some books
-
-browserDb.books.find(function (error, books) { // find all
-  // books.length === 3
+<pre><code>
+browserDb.books.save({
+topic:["android"],
+title:"Another android book",
 });
+</code></pre>
 
+<h3>Find all books</h3>
+
+<pre><code>
+browserDb.books.find(function (error, books) {
+// books.length === 3
+});
+</code></pre>
+
+<h3>Find one book</h3>
+
+<pre><code>
 browserDb.books.findOne(function (error, book) {
-  console.log(book);
+console.log(book);
 });
+</code></pre>
 
+<h3>Find books by title (string equality)</h3>
+
+<pre><code>
 browserDb.books.find({title:"The Good Parts"}, function (error, books) {
-  // books[0].__id === 1
+// books[0].__id === 1
 });
+</code></pre>
 
+<h3>Find books by topic (array contains)</h3>
+
+<pre><code>
 browserDb.books.find({topic:"java"}, function (error, books) {
-  // books[0].__id === 3
+// books[0].__id === 3
 });
+</code></pre>
 
+<h3>Find books by cost (greater than)</h3>
+
+<pre><code>
 browserDb.books.find({cost:{$gt:100}}, function (error, books) {
-  // books[0].__id === 3
+// books[0].__id === 3
 });
+</code></pre>
 
+<h3>Find books by cost (greater than equals)</h3>
+
+<pre><code>
 browserDb.books.find({cost:{$gte:100}}, function (error, books) {
-  // books[0].__id === 2
-  // books[1].__id === 3
+// books[0].__id === 2
+// books[1].__id === 3
 });
+</code></pre>
 
+<h3>Find books by cost (lesser than)</h3>
+
+<pre><code>
 browserDb.books.find({cost:{$lt:100}}, function (error, books) {
-  // books[0].__id === 1
+// books[0].__id === 1
 });
+</code></pre>
 
+<h3>Find books by cost (lesser than equals)</h3>
+
+<pre><code>
 browserDb.books.find({cost:{$lte:100}}, function (error, books) {
-  // books[0].__id === 1
-  // books[1].__id === 2
+// books[0].__id === 1
+// books[1].__id === 2
 });
+</code></pre>
 
+<h3>Find books by cost (not equal to)</h3>
+
+<pre><code>
 browserDb.books.find({cost:{$ne:100}}, function (error, books) {
-  // books[0].__id === 1
-  // books[1].__id === 3
+// books[0].__id === 1
+// books[1].__id === 3
 });
+</code></pre>
 
+<h3>Find books by cost (not in array)</h3>
+
+<pre><code>
 browserDb.books.find({cost:{$nin:[50, 75]}}, function (error, books) {
-  // books[0].__id === 2
-  // books[1].__id === 3
+// books[0].__id === 2
+// books[1].__id === 3
 });
+</code></pre>
 
+<h3>Find books by cost (mod)</h3>
+
+<pre><code>
 browserDb.books.find({cost:{$mod:[12, 2]}}, function (error, books) {
-  // books[0].__id === 1
+// books[0].__id === 1
 });
+</code></pre>
 
+<h3>Find books by topic (array size)</h3>
+
+<pre><code>
 browserDb.books.find({topic:{$size:2}}, function (error, books) {
-  // books[0].__id === 3
+// books[0].__id === 3
 });
+</code></pre>
 
+<h3>Find books by author (author exists)</h3>
+
+<pre><code>
 browserDb.books.find({author:{$exists:true}}, function (error, books) {
-  // books[0].__id === 3
+// books[0].__id === 3
 });
+</code></pre>
 
+<h3>Find books by author (typeof string)</h3>
+
+<pre><code>
 browserDb.books.find({author:{$typeof:"string"}}, function (error, books) {
-  // books[0].__id === 3
+// books[0].__id === 3
 });
+</code></pre>
 
+<h3>Find books by topic (not typeof)</h3>
+
+<pre><code>
 browserDb.books.find({topic:{$nottypeof:"object"}}, function (error, books) {
-  // books[0].__id === 2
+// books[0].__id === 2
 });
+</code></pre>
 
+<h3>Remove books by title (equals)</h3>
 
-
-// Remove books
-
+<pre><code>
 browserDb.books.remove({title:"Android in action"}, function () {
-  //..
+//..
 });
+</code></pre>
 
+<h3>Remove all books</h3>
+
+<pre><code>
 browserDb.books.remove(function (error, result) { // remove all
-  //..
+//..
 });
 </code></pre>
 
@@ -222,26 +288,30 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 For more information, please refer to &lt;http://unlicense.org/&gt;
 </code></pre>
-        </article>
-      </div>
-    </div>
-    <footer>
-      <div class="owner">
-      <p><a href="https://github.com/Srirangan" class="avatar"><img src="https://secure.gravatar.com/avatar/40bec8c5a2a804cc48ab9d8443592b90?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a> <a href="https://github.com/Srirangan">Srirangan</a> maintains <a href="https://github.com/Srirangan/browserdb">BrowserDB</a></p>
+</article>
+</div>
+</div>
+<footer>
+  <div class="owner">
+    <p>
+      <a href="https://github.com/Srirangan" class="avatar"><img src="https://secure.gravatar.com/avatar/40bec8c5a2a804cc48ab9d8443592b90?s=30&amp;d=https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-140.png" width="48" height="48"/></a>
+      <a href="https://github.com/Srirangan">Srirangan</a> maintains
+      <a href="https://github.com/Srirangan/browserdb">BrowserDB</a></p>
 
 
-      </div>
-      <div class="creds">
-        <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
-      </div>
-    </footer>
   </div>
-  <div class="current-section">
-    <a href="#top">Scroll to top</a>
-    <a href="https://github.com/Srirangan/browserdb/tarball/master" class="tar">tar</a><a href="https://github.com/Srirangan/browserdb/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
-    <p class="name"></p>
+  <div class="creds">
+    <small>This page generated using <a href="https://pages.github.com/">GitHub Pages</a><br/>theme by
+      <a href="http://twitter.com/jonrohan/">Jon Rohan</a></small>
   </div>
+</footer>
+</div>
+<div class="current-section">
+  <a href="#top">Scroll to top</a>
+  <a href="https://github.com/Srirangan/browserdb/tarball/master" class="tar">tar</a><a href="https://github.com/Srirangan/browserdb/zipball/master" class="zip">zip</a><a href="" class="code">source code</a>
+  <p class="name"></p>
+</div>
 
-  
+
 </body>
 </html>
