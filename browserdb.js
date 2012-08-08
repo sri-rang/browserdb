@@ -235,6 +235,7 @@
     };
 
     openDbRequest.onupgradeneeded = function (event) {
+      db = openDbRequest.result;
       verifyCollections(function () {
         prepareBrowserDbInstance();
       });
