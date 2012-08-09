@@ -40,23 +40,23 @@
 
 <p><em>Experimental. Tested on latest versions of Chromium.</em></p>
 
-<h4>Mission</h4>
+<h4>Inspiration</h4>
 
-<p>IndexedDB has a terribly confusing API. Can we better it?</p>
+<p> IndexedDB has a terribly confusing API.</p>
 
 <p>Can we provide a simpler API? Can this API be similar to popular document based data stores?</p>
-
-<p><em>Enter BrowserDB</em></p>
-
-<h4>In-browser only</h4>
-
-<p>BrowserDB should be used in the browser only. It is not a server side JavaScript library.</p>
-
-<h4>Inspiration</h4>
 
 <p>MongoDB has a excellent API. It makes querying and working with the data store pleasurable.</p>
 
 <p>BrowserDB hopes to deliver a similar experience to developers.</p>
+
+<h4>Mission</h4>
+
+<ul>
+  <li>Provide simple API for basic CRUD operations</li>
+  <li>Provide simple querying mechanism similar but not identical to MongoDB</li>
+  <li>Abstract underlying cruft such as schema change version-bumps, cursors, indexing</li>
+</ul>
 
 <h2>Using BrowserDB</h2>
 
@@ -97,21 +97,21 @@ new BrowserDb({
   // Here's the methods browserDb provides:
 
   // browserDb: {
-  //   users: {
-  //     save: function(object, callback) {..},
-  //     remove: function(query, callback) {..},
-  //     find: function(query, callback) {..},
-  //     findOne: function(query, callback) {..},
-  //     findById: function(id, callback) {..}
-  //   },
-  //   books: {
-  //     save: function(object, callback) {..},
-  //     remove: function(query, callback) {..},
-  //     find: function(query, callback) {..},
-  //     findOne: function(query, callback) {..},
-  //     findById: function(id, callback) {..}
-  //   },
-  //   delete: function(callback) {...}
+  // users: {
+  // save: function(object, callback) {..},
+  // remove: function(query, callback) {..},
+  // find: function(query, callback) {..},
+  // findOne: function(query, callback) {..},
+  // findById: function(id, callback) {..}
+  // },
+  // books: {
+  // save: function(object, callback) {..},
+  // remove: function(query, callback) {..},
+  // find: function(query, callback) {..},
+  // findOne: function(query, callback) {..},
+  // findById: function(id, callback) {..}
+  // },
+  // delete: function(callback) {...}
   // }
 
 });
@@ -121,25 +121,25 @@ new BrowserDb({
 
 <pre><code>
 browserDb.books.save({
-_id:1,
-topic:["javascript"],
-title:"The Good Parts",
-cost:50
+  _id:1,
+  topic:["javascript"],
+  title:"The Good Parts",
+  cost:50
 });
 
 browserDb.books.save({
-_id:2,
-topic:"android",
-title:"Android in action",
-cost:100
+  _id:2,
+  topic:"android",
+  title:"Android in action",
+  cost:100
 });
 
 browserDb.books.save({
-_id:3,
-topic:["android", "java"],
-title:"Apache Maven 3 Cookbook",
-author:"Srirangan",
-cost:150
+  _id:3,
+  topic:["android", "java"],
+  title:"Apache Maven 3 Cookbook",
+  author:"Srirangan",
+  cost:150
 });
 </code></pre>
 
@@ -147,8 +147,8 @@ cost:150
 
 <pre><code>
 browserDb.books.save({
-topic:["android"],
-title:"Another android book",
+  topic:["android"],
+  title:"Another android book",
 });
 </code></pre>
 
@@ -156,7 +156,7 @@ title:"Another android book",
 
 <pre><code>
 browserDb.books.find(function (error, books) {
-// books.length === 3
+  // books.length === 4
 });
 </code></pre>
 
@@ -164,7 +164,7 @@ browserDb.books.find(function (error, books) {
 
 <pre><code>
 browserDb.books.findOne(function (error, book) {
-console.log(book);
+  console.log(book);
 });
 </code></pre>
 
@@ -172,7 +172,7 @@ console.log(book);
 
 <pre><code>
 browserDb.books.find({title:"The Good Parts"}, function (error, books) {
-// books[0]._id === 1
+  // books[0]._id === 1
 });
 </code></pre>
 
@@ -180,7 +180,7 @@ browserDb.books.find({title:"The Good Parts"}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({topic:"java"}, function (error, books) {
-// books[0]._id === 3
+  // books[0]._id === 3
 });
 </code></pre>
 
@@ -188,7 +188,7 @@ browserDb.books.find({topic:"java"}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({cost:{$gt:100}}, function (error, books) {
-// books[0]._id === 3
+  // books[0]._id === 3
 });
 </code></pre>
 
@@ -196,8 +196,8 @@ browserDb.books.find({cost:{$gt:100}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({cost:{$gte:100}}, function (error, books) {
-// books[0]._id === 2
-// books[1]._id === 3
+  // books[0]._id === 2
+  // books[1]._id === 3
 });
 </code></pre>
 
@@ -205,7 +205,7 @@ browserDb.books.find({cost:{$gte:100}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({cost:{$lt:100}}, function (error, books) {
-// books[0]._id === 1
+  // books[0]._id === 1
 });
 </code></pre>
 
@@ -213,8 +213,8 @@ browserDb.books.find({cost:{$lt:100}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({cost:{$lte:100}}, function (error, books) {
-// books[0]._id === 1
-// books[1]._id === 2
+  // books[0]._id === 1
+  // books[1]._id === 2
 });
 </code></pre>
 
@@ -222,8 +222,8 @@ browserDb.books.find({cost:{$lte:100}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({cost:{$ne:100}}, function (error, books) {
-// books[0]._id === 1
-// books[1]._id === 3
+  // books[0]._id === 1
+  // books[1]._id === 3
 });
 </code></pre>
 
@@ -231,8 +231,8 @@ browserDb.books.find({cost:{$ne:100}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({cost:{$nin:[50, 75]}}, function (error, books) {
-// books[0]._id === 2
-// books[1]._id === 3
+  // books[0]._id === 2
+  // books[1]._id === 3
 });
 </code></pre>
 
@@ -240,7 +240,7 @@ browserDb.books.find({cost:{$nin:[50, 75]}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({cost:{$mod:[12, 2]}}, function (error, books) {
-// books[0]._id === 1
+  // books[0]._id === 1
 });
 </code></pre>
 
@@ -248,7 +248,7 @@ browserDb.books.find({cost:{$mod:[12, 2]}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({topic:{$size:2}}, function (error, books) {
-// books[0]._id === 3
+  // books[0]._id === 3
 });
 </code></pre>
 
@@ -256,7 +256,7 @@ browserDb.books.find({topic:{$size:2}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({author:{$exists:true}}, function (error, books) {
-// books[0]._id === 3
+  // books[0]._id === 3
 });
 </code></pre>
 
@@ -264,7 +264,7 @@ browserDb.books.find({author:{$exists:true}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({author:{$typeof:"string"}}, function (error, books) {
-// books[0]._id === 3
+  // books[0]._id === 3
 });
 </code></pre>
 
@@ -272,7 +272,7 @@ browserDb.books.find({author:{$typeof:"string"}}, function (error, books) {
 
 <pre><code>
 browserDb.books.find({topic:{$nottypeof:"object"}}, function (error, books) {
-// books[0]._id === 2
+  // books[0]._id === 2
 });
 </code></pre>
 
@@ -280,7 +280,7 @@ browserDb.books.find({topic:{$nottypeof:"object"}}, function (error, books) {
 
 <pre><code>
 browserDb.books.remove({title:"Android in action"}, function () {
-//..
+  //..
 });
 </code></pre>
 
@@ -288,7 +288,7 @@ browserDb.books.remove({title:"Android in action"}, function () {
 
 <pre><code>
 browserDb.books.remove(function (error, result) { // remove all
-//..
+  //..
 });
 </code></pre>
 
