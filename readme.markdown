@@ -2,25 +2,23 @@
 
 *Experimental. Tested on latest version of Chromium.*
 
-#### Mission
+#### Inspiration
 
-IndexedDB has a terribly confusing API.  Can we better it?
+IndexedDB has a terribly confusing API.
 
 Can we provide a simpler API? Can this API be similar to popular document based data stores?
 
-*Enter BrowserDB*
-
-#### In-browser only
-
-BrowserDB should be used in the browser only. It is not a server side JavaScript library.
-
-#### Inspiration
-
-MongoDB has a excellent API. It makes querying and working with the datastore pleasurable.
+MongoDB has a excellent API. It makes querying and working with the data store pleasurable.
 
 BrowserDB hopes to deliver a similar experience to developers.
 
-## Examples
+#### Mission
+
+* Provide simple API for basic CRUD operations
+* Provide simple querying mechanism similar but not identical to MongoDB
+* Abstract underlying cruft such as schema change version-bumps, cursors, indexing
+
+## Using BrowserDB
 
 ```javascript
 <script src="https://raw.github.com/Srirangan/browserdb/master/browserdb.js"></script>
@@ -44,6 +42,38 @@ new BrowserDb({
   collections:["users", "books"]
 }, function (error, browserDb) {
   if( !error ) console.log("success");
+});
+
+
+
+// browserDb Instance
+
+new BrowserDb({
+  db:"myAppsDb",
+  collections:["users", "books"]
+}, function (error, browserDb) {
+
+  // Second argument 'browserDb' exposes the API
+  // Here's the methods browserDb provides:
+
+  // browserDb: {
+  // users: {
+  //  save: function(object, callback) {..},
+  //  remove: function(query, callback) {..},
+  //  find: function(query, callback) {..},
+  //  findOne: function(query, callback) {..},
+  //  findById: function(id, callback) {..}
+  // },
+  // books: {
+  //  save: function(object, callback) {..},
+  //  remove: function(query, callback) {..},
+  //  find: function(query, callback) {..},
+  //  findOne: function(query, callback) {..},
+  //  findById: function(id, callback) {..}
+  // },
+  // delete: function(callback) {...}
+  // }
+
 });
 
 
