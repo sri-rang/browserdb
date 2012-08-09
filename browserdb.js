@@ -57,9 +57,8 @@
       var browserDbInstance;
 
       var getCollectionApiInstance = function (collection) {
-        var transaction = db.transaction([collection], "readwrite");
-        var store = transaction.objectStore(collection);
-        var findObjectsByQuery = function (query, onlyOne, callback) {
+        var transaction, store;
+        var findObjectsByQuery = function (transaction, store, query, onlyOne, callback) {
           var objectQueryTest = function (query, object) {
             if (typeof query !== "object") return false;
             else {
@@ -142,6 +141,8 @@
         };
         return {
           save:function (object, callback) {
+            transaction = db.transaction([collection], "readwrite");
+            store = transaction.objectStore(collection);
             var saveRequest = store.put(object);
             saveRequest.onerror = function (event) {
               if (typeof callback === "function") callback(event);
@@ -157,9 +158,11 @@
             };
           },
           remove:function () {
+            transaction = db.transaction([collection], "readwrite");
+            store = transaction.objectStore(collection);
             var query = (typeof arguments[0] === "object") ? arguments[0] : undefined;
             var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
-            findObjectsByQuery(query, false, function (error, result, event) {
+            findObjectsByQuery(transaction, store, query, false, function (error, result, event) {
               result.forEach(function (object) {
                 store.delete(object._id);
               });
@@ -171,7 +174,9 @@
             var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
             if (!callback) throw new Error("Callback required");
             else {
-              findObjectsByQuery(query, false, function (error, result, event) {
+              transaction = db.transaction([collection], "readwrite");
+              store = transaction.objectStore(collection);
+              findObjectsByQuery(transaction, store, query, false, function (error, result, event) {
                 callback(error, result, event);
               });
             }
@@ -181,12 +186,16 @@
             var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
             if (!callback) throw new Error("Callback required");
             else {
-              findObjectsByQuery(query, false, function (error, result, event) {
+              transaction = db.transaction([collection], "readwrite");
+              store = transaction.objectStore(collection);
+              findObjectsByQuery(transaction, store, query, false, function (error, result, event) {
                 callback(error, result[0], event);
               });
             }
           },
           findById:function (id, callback) {
+            transaction = db.transaction([collection], "readwrite");
+            store = transaction.objectStore(collection);
             var getRequest = store.get(id);
             getRequest.onerror = function (event) {
               if (typeof callback === "function") callback(event);
