@@ -54,7 +54,7 @@
 
 <h4>Inspiration</h4>
 
-<p>MongoDB has a excellent API. It makes querying and working with the datastore pleasurable.</p>
+<p>MongoDB has a excellent API. It makes querying and working with the data store pleasurable.</p>
 
 <p>BrowserDB hopes to deliver a similar experience to developers.</p>
 
@@ -68,10 +68,10 @@
 
 <pre><code>
 new BrowserDb({
-db:"myAppsDb",
-collections:["one", "two", "three"]
+  db:"myAppsDb",
+  collections:["one", "two", "three"]
 }, function (error, browserDb) {
-if( !error ) console.log("success");
+  if( !error ) console.log("success");
 });
 </code></pre>
 
@@ -79,10 +79,41 @@ if( !error ) console.log("success");
 
 <pre><code>
 new BrowserDb({
-db:"myAppsDb",
-collections:["users", "books"]
+  db:"myAppsDb",
+  collections:["users", "books"]
 }, function (error, browserDb) {
-if( !error ) console.log("success");
+  if( !error ) console.log("success");
+});
+</code></pre>
+
+<h3>browserDb instance</h3>
+<pre><code>
+new BrowserDb({
+  db:"myAppsDb",
+  collections:["users", "books"]
+}, function (error, browserDb) {
+
+  // Second argument 'browserDb' exposes the API
+  // Here's the methods browserDb provides:
+
+  // browserDb: {
+  //   users: {
+  //     save: function(object, callback) {..},
+  //     remove: function(query, callback) {..},
+  //     find: function(query, callback) {..},
+  //     findOne: function(query, callback) {..},
+  //     findById: function(id, callback) {..}
+  //   },
+  //   books: {
+  //     save: function(object, callback) {..},
+  //     remove: function(query, callback) {..},
+  //     find: function(query, callback) {..},
+  //     findOne: function(query, callback) {..},
+  //     findById: function(id, callback) {..}
+  //   },
+  //   delete: function(callback) {...}
+  // }
+
 });
 </code></pre>
 
