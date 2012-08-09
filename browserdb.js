@@ -19,7 +19,7 @@
         for (var i = 0; i < options.collections.length; i++) {
           var collection = options.collections[i];
           if (!db.objectStoreNames.contains(collection)) {
-            db.createObjectStore(collection, {keyPath:"__id", autoIncrement:true});
+            db.createObjectStore(collection, {keyPath:"_id", autoIncrement:true});
           }
         }
       };
@@ -161,7 +161,7 @@
             var callback = (typeof arguments[arguments.length - 1] === "function") ? arguments[arguments.length - 1] : undefined;
             findObjectsByQuery(query, false, function (error, result, event) {
               result.forEach(function (object) {
-                store.delete(object.__id);
+                store.delete(object._id);
               });
               if (typeof callback === "function") callback(error, true, event);
             });

@@ -4,21 +4,21 @@ new BrowserDb({
 }, function (error, browserDb) {
 
   browserDb.books.save({
-    __id:1,
+    _id:1,
     topic:["javascript"],
     title:"The Good Parts",
     cost:50
   });
 
   browserDb.books.save({
-    __id:2,
+    _id:2,
     topic:"android",
     title:"Android in action",
     cost:100
   });
 
   browserDb.books.save({
-    __id:3,
+    _id:3,
     topic:["android", "java"],
     title:"Apache Maven 3 Cookbook",
     author:"Srirangan",
@@ -32,5 +32,7 @@ new BrowserDb({
       });
     });
   });
+
+  setTimeout(browserDb.delete, 500);
 
 });

@@ -11,5 +11,7 @@ new BrowserDb({
     ok(browserDb, "browserDb")
   });
 
+  setTimeout(browserDb.delete, 500);
+
 });
 

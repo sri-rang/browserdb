@@ -9,4 +9,6 @@ new BrowserDb({
     ok(browserDb.three, "browserDb.three must exist");
   });
 
+  setTimeout(browserDb.delete, 500);
+
 });

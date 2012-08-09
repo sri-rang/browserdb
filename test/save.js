@@ -10,21 +10,21 @@ new BrowserDb({
     test("Save an object", function () {
       ok(savedObject, "savedObject must be created");
       deepEqual(savedObject.name, "Sri", "savedObject.name === 'Sri'");
-      ok(savedObject.__id, "savedObject.__id must be auto generated");
+      ok(savedObject._id, "savedObject._id must be auto generated");
     });
   });
 
   browserDb.two.save({
-    __id:"wtf",
+    _id:"wtf",
     name:"Sri"
   }, function (error, savedObject) {
-    test("Save an object with manual __id", function () {
-      deepEqual(savedObject.__id, "wtf", "savedObject.__id === 'wtf'");
+    test("Save an object with manual _id", function () {
+      deepEqual(savedObject._id, "wtf", "savedObject._id === 'wtf'");
     });
   });
 
   browserDb.two.save({
-    __id:"wtf",
+    _id:"wtf",
     name:"Srirangan"
   }, function (error, savedObject) {
     test("Update an object", function () {
@@ -32,5 +32,6 @@ new BrowserDb({
     });
   });
 
+  setTimeout(browserDb.delete, 500);
 
 });
