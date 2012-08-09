@@ -226,9 +226,7 @@
     };
 
     openDbRequest.onsuccess = function (event) {
-
       db = openDbRequest.result;
-
       verifyCollections(function () {
         prepareBrowserDbInstance();
       });
