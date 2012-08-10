@@ -2,16 +2,19 @@ new BrowserDb({
   db:"db",
   collections:["one", "two", "three"]
 }, function (error, browserDb) {
-
-  test("No errors connecting to browserDb", function () {
-    ok(!error, "Error must be undefined")
+  module("Browser DB Open tests");
+  asyncTest("No errors connecting to browserDb", function () {
+    ok(typeof error === "undefined", "Error is undefined, so this works");
+	start();
   });
 
-  test("Db created", function () {
-    ok(browserDb, "browserDb")
+  asyncTest("Db created", function () {
+    ok(browserDb, "browserDb is defined");
+	start();
   });
 
-  setTimeout(browserDb.delete, 500);
-
+  QUnit.done(function(){
+  	browserDb.delete();
+  });
 });
 
