@@ -38,7 +38,6 @@ new BrowserDb({
 
   QUnit.done(function () {
     browserDb.delete();
-    start();
   });
 
 });
