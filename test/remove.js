@@ -3,6 +3,8 @@ new BrowserDb({
   collections:["books"]
 }, function (error, browserDb) {
 
+  module("Remove");
+
   browserDb.books.save({
     _id:1,
     topic:["javascript"],
@@ -25,14 +27,17 @@ new BrowserDb({
     cost:150
   });
 
-  browserDb.books.remove(function () {
-    browserDb.books.find(function (error, books) {
-      test("Find all books", function () {
+  asyncTest("Find all books", 1, function () {
+    browserDb.books.remove(function () {
+      browserDb.books.find(function (error, books) {
         deepEqual(books.length, 0, "Zero books");
+        start();
       });
     });
   });
 
-  setTimeout(browserDb.delete, 500);
+  QUnit.done(function () {
+    browserDb.delete();
+  });
 
 });

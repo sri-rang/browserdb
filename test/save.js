@@ -3,35 +3,42 @@ new BrowserDb({
   collections:["one", "two", "three"]
 }, function (error, browserDb) {
 
+  module("Save");
 
-  browserDb.one.save({
-    name:"Sri"
-  }, function (error, savedObject) {
-    test("Save an object", function () {
+  asyncTest("Save an object", 3, function () {
+    browserDb.one.save({
+      name:"Sri"
+    }, function (error, savedObject) {
       ok(savedObject, "savedObject must be created");
       deepEqual(savedObject.name, "Sri", "savedObject.name === 'Sri'");
       ok(savedObject._id, "savedObject._id must be auto generated");
+      start();
     });
   });
 
-  browserDb.two.save({
-    _id:"wtf",
-    name:"Sri"
-  }, function (error, savedObject) {
-    test("Save an object with manual _id", function () {
+  asyncTest("Save an object with manual _id", 1, function () {
+    browserDb.two.save({
+      _id:"wtf",
+      name:"Sri"
+    }, function (error, savedObject) {
       deepEqual(savedObject._id, "wtf", "savedObject._id === 'wtf'");
+      start();
     });
   });
 
-  browserDb.two.save({
-    _id:"wtf",
-    name:"Srirangan"
-  }, function (error, savedObject) {
-    test("Update an object", function () {
+  asyncTest("Update an object", 1, function () {
+    browserDb.two.save({
+      _id:"wtf",
+      name:"Srirangan"
+    }, function (error, savedObject) {
       deepEqual(savedObject.name, "Srirangan", "savedObject.name === 'Srirangan'");
+      start();
     });
   });
 
-  setTimeout(browserDb.delete, 500);
+  QUnit.done(function () {
+    browserDb.delete();
+    start();
+  });
 
 });
